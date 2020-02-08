@@ -49,11 +49,9 @@ df1.iloc[:,:5].describe()
 df1.isnull().sum().sum()
 df2 = pd.DataFrame(elct2)
 
-df_cmb = pd.concat([df1,df2], axis = 1)
+df_cmb = (df1 + df2)/2
 
 ### Train/Test split ###
 
-X_train, X_test, y_train, y_test = train_test_split(df_cmb, lbl_raw, test_size=0.33, random_state=0)
-
-
-
+X_train, X_test, y_train, y_test = train_test_split(df_cmb, lbl_raw,
+                                                    test_size=0.33, random_state=0)
