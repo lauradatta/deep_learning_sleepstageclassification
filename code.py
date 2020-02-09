@@ -8,9 +8,6 @@ from pandas.plotting import autocorrelation_plot
 from statsmodels.tsa.stattools import acf
 from sklearn.model_selection import train_test_split
 
-# Change directory
-os.chdir('/Users/bejbcia/pythonprojects/Deep_learning/')
-
 # Load data
 with open('Data_Raw_signals.pkl', 'rb') as f:
     raw = pickle.load(f)
