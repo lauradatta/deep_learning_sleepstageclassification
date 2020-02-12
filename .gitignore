@@ -16,4 +16,7 @@ ipython_config.py
 # Remove previous ipynb_checkpoints
 #   git rm -r .ipynb_checkpoints/
 
+# Data files
+*pkl
+
 # End of https://www.gitignore.io/api/jupyternotebooks
