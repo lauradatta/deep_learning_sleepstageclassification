@@ -34,6 +34,8 @@ lbl_raw = np.array(raw[1]) # labels
 dt_spect = np.array(spect[0]) # full data
 lbl_spect = np.array(spect[1]) # labels
 
+
+## Look at Raw signals
 elct1 = dt_raw[:,0] # first electrode
 elct2 = dt_raw[:,1] # second electrode
 
@@ -44,7 +46,6 @@ elct2 = dt_raw[:,1] # second electrode
 p1e1 = elct1[0,:]
 plt.plot(p1e1) # electrode 1 for first person
 plt.plot(elct2[0,:]) # electrode 2 for first person
-plt.show()
 
 #%%
 # checking autocorrelation
@@ -54,13 +55,28 @@ autocorrelation_plot(p1e1)
 autocorrelation_plot(elct2[0,:])
 
 #%%
+##Look at Spectograms
+
+spec1 = dt_spect[:,0] #first electrode
+spec2 = dt_spect[:,1] #second electrode
+
+#%%
+#visualise spectograms for first person
+
+pers1_spec1 = spec1[0,:]
+plt.plot(pers1_spec1)
+
+pers1_spec2 = spec2[0,:]
+plt.plot(pers1_spec2)
+
+
+#%%
 # checking basics
 
 df1 = pd.DataFrame(elct1) # row=person, column=timestep
 df1.iloc[:,:5].describe()
 n df1.isnull().sum().sum()
 df2 = pd.DataFrame(elct2)
-
 df_cmb = (df1 + df2)/2
 
 #%%
@@ -70,7 +86,7 @@ X_train, X_test, y_train, y_test = train_test_split(df_cmb, lbl_raw,
                                                     test_size=0.33, random_state=0)
 
 
-
+#%%
 model = Sequential()
 
 model.add(layers.Conv1D(8, (8), activation='relu', input_shape=(10301,3000)))
