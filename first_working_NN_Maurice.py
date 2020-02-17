@@ -1,11 +1,14 @@
 import os
 import pickle
 import numpy as np
-from keras import models
-from keras import layers
+from keras import models, layers
 from keras.utils import to_categorical
 from keras.optimizers import Adam
 from sklearn.model_selection import train_test_split
+import logging
+
+# Remove some unwanted warnings
+logging.getLogger('tensorflow').disabled = True
 
 # set working directory
 os.chdir (r"C:\Users\mauri\OneDrive\Documenten\Master Data Science\VAKKEN\Deep Learning\DL_data")
@@ -25,8 +28,7 @@ labels = np.array(raw[1])
 signal1 = signal[:,0,:]
 
 #Split data into train and testset
-X_train, X_test, y_train, y_test = train_test_split (signal, labels,
-                                                     test_size = 0.33, random_state = 0)
+X_train, X_test, y_train, y_test = train_test_split (signal, labels, test_size = 0.33, random_state = 0)
 
 #reshape input data to shape that is accepted by NN
 X_train1 = X_train.reshape(X_train.shape[0], 3000, 2)
@@ -35,7 +37,6 @@ X_test1 = X_test.reshape(X_test.shape[0], 3000, 2)
 #hotlabel
 y_train_hot = to_categorical(y_train, num_classes=6)
 y_test_hot = to_categorical(y_test, num_classes=6)
-
 
 def base_model():
     model = models.Sequential()
@@ -66,4 +67,4 @@ model.fit(X_train1,y_train_hot,
           verbose =2)
 
 cat, test_acc = model.evaluate(X_test1, y_test_hot, batch_size=128)
-print("accuracy score on test set is:{}".format(round(test_acc,3)))
+print("accuracy score on test set is:{}".format(round(test_acc, 3)))
