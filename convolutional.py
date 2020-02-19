@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import os
 import pickle
 from keras.models import Sequential
-from keras.layers import Conv1D, MaxPooling1D, LSTM, Dense
+from keras.layers import Conv1D, MaxPooling1D, LSTM, Dense, Flatten
 from keras.optimizers import Adam
 import logging
 
@@ -26,6 +26,7 @@ def base_model():
     model.add (MaxPooling1D (8))
     model.add (Conv1D (32, (8), activation = 'relu'))
     model.add (MaxPooling1D (8))
+    model.add (Flatten)
     model.add (LSTM (64, return_sequences = True))
     model.add (LSTM (64))
     model.add (Dense (6, activation = 'softmax'))
@@ -49,5 +50,5 @@ model.fit(X_train,y_train_hot,
 
 #%% evaluate the model
 
-cat, test_acc = model.evaluate(X_test1, y_test_hot, batch_size=128)
+cat, test_acc = model.evaluate(X_test, y_test_hot, batch_size=128)
 print("accuracy score on test set is:{}".format(round(test_acc, 3)))
