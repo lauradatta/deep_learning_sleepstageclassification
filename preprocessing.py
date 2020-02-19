@@ -4,13 +4,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os
 import pickle
-#%%
 from pandas.plotting import autocorrelation_plot
 from statsmodels.tsa.stattools import acf
 from sklearn.model_selection import train_test_split
 from keras.utils import to_categorical
+from sklearn.preprocessing import StandardScaler
 
-<<<<<<< HEAD:preprocessing.py
 #%%  Load data
 
 #working directory is set at level of project
@@ -90,6 +89,33 @@ X_train, X_test, y_train, y_test = train_test_split(signal_raw, label_raw,
 
 X_train = X_train.reshape(X_train.shape[0], 3000, 2)
 X_test = X_test.reshape(X_test.shape[0], 3000, 2)
+
+## split the signals into 1st and 2nd signal
+# training data
+X_train_1 = X_train[:,:,0]
+X_train_2 = X_train[:,:,1]
+
+## test data
+X_test_1 = X_test[:,:,0]
+X_test_2 = X_test[:,:,1]
+
+#%% Standardise the data
+
+# signal 1
+scaler_sig1 = StandardScaler()
+
+X_train_1 = scaler_sig1.fit_transform(X_train_1)
+X_test_1 = scaler_sig1.transform(X_test_1)
+
+#signal 2
+scaler_sig2 = StandardScaler()
+
+X_train_2 = scaler_sig2.fit_transform(X_train_2)
+X_test_2 = scaler_sig2.transform(X_test_2)
+
+
+#merge different signals together
+X_train = np.stack((X_train_1, X_train_2), axis = 2)
 
 
 #%% hot label the labels
