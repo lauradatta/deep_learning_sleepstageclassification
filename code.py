@@ -10,12 +10,17 @@ from statsmodels.tsa.stattools import acf
 from sklearn.model_selection import train_test_split
 from keras.utils import to_categorical
 
+<<<<<<< HEAD:preprocessing.py
 #%%  Load data
 
 #working directory is set at level of project
 
 # Load data (is data in data folder)
 with open('data/Data_Raw_signals.pkl', 'rb') as f:
+=======
+# Load data
+with open('Data_Raw_signals.pkl', 'rb') as f:
+>>>>>>> master:code.py
     raw = pickle.load(f)
 
 with open('data/Data_Spectrograms.pkl', 'rb') as f:
