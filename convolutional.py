@@ -58,7 +58,7 @@ print("accuracy score on test set is:{}".format(round(test_acc, 3)))
 #%% Now seperapte CNN and lstm and add dropouts
 
 def cnn_model():
-    inp = Input(shape =(3000,1))
+    inp = Input(shape =(3000,))
     layer=Conv1D (8, 8, activation = 'relu', padding = "valid")(inp)
     layer=MaxPooling1D (8)(layer)
     layer = Dropout(rate = 0.5)(layer)
@@ -105,7 +105,7 @@ model_lstm.summary()
 #%% # train the model
 
 model_lstm.fit(X_train,y_train_hot,
-          epochs=50,
+          epochs=20,
           batch_size=128,
           verbose =2)
 
