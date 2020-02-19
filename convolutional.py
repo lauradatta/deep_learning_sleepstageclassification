@@ -26,7 +26,6 @@ def base_model():
     model.add (MaxPooling1D (8))
     model.add (Conv1D (32, (8), activation = 'relu'))
     model.add (MaxPooling1D (8))
-    model.add (Flatten)
     model.add (LSTM (64, return_sequences = True))
     model.add (LSTM (64))
     model.add (Dense (6, activation = 'softmax'))
