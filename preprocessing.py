@@ -52,3 +52,11 @@ df_cmb = (df1 + df2)/2
 
 X_train, X_test, y_train, y_test = train_test_split(df_cmb, lbl_raw,
                                                     test_size=0.33, random_state=0)
+
+#reshape input data to shape that is accepted by NN
+X_train = X_train.reshape(10301, 3000,1)
+X_test = X_test.reshape(X_test.shape[0], 3000,1)
+
+#hotlabel
+y_train_hot = to_categorical(y_train, num_classes=6)
+y_test_hot = to_categorical(y_test, num_classes=6)
