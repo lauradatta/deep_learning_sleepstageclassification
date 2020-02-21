@@ -116,7 +116,7 @@ X_test_2 = scaler_sig2.transform(X_test_2)
 
 #merge different signals together
 X_train = np.stack((X_train_1, X_train_2), axis = 2)
-
+X_test = np.stack((X_test_1, X_test_2), axis = 2)
 
 #%% hot label the labels
 y_train_hot = to_categorical(y_train, num_classes=6)
