@@ -7,6 +7,7 @@ import pickle
 from pandas.plotting import autocorrelation_plot
 from statsmodels.tsa.stattools import acf
 from sklearn.model_selection import train_test_split
+from keras.utils import to_categorical
 
 # Load data
 with open('Data_Raw_signals.pkl', 'rb') as f:
