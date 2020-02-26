@@ -8,7 +8,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os
 import pickle
-from keras import Model
+from keras import Model, layers
 from keras.models import Sequential
 from keras.layers import Conv1D, MaxPooling1D, LSTM, Dense, Flatten, TimeDistributed, Input, Dropout
 from keras.optimizers import Adam
@@ -41,6 +41,10 @@ def base_model():
 model = base_model()
 model.summary()
 
+#%%
+
+X_train_exp = np.expand_dims(X_train, 3)  
+
 #%% # train the model
 
 model.fit(X_train,y_train_hot,
@@ -58,7 +62,7 @@ print("accuracy score on test set is:{}".format(round(test_acc, 3)))
 #%% Now seperapte CNN and lstm and add dropouts
 
 def cnn_model():
-    inp = Input(shape =(3000,))
+    inp = Input(shape =(3000,2))
     layer=Conv1D (8, 8, activation = 'relu', padding = "valid")(inp)
     layer=MaxPooling1D (8)(layer)
     layer = Dropout(rate = 0.5)(layer)
@@ -66,46 +70,52 @@ def cnn_model():
     layer=MaxPooling1D(8)(layer)
     layer=Conv1D (32, (8), activation = 'relu')(layer)
     layer=MaxPooling1D(8)(layer)
-    out = Flatten()(layer)
+    flat = Flatten()(layer)
+    #out = Dense(64, activation = "relu")(layer)
     #model.add (LSTM (64, return_sequences = True))
     #model.add (LSTM (64))
     #model.add (Dense (6, activation = 'softmax'))
     
-    base_model=Model(inputs = inp, outputs = out)    
+    cnn_model=Model(inputs = inp, outputs = flat)    
     optimizer=Adam (lr = 0.001, beta_1 = 0.9, beta_2 = 0.999, decay = 0, epsilon = (10**-8))
-    base_model.compile (loss = 'categorical_crossentropy',
+    cnn_model.compile (loss = 'categorical_crossentropy',
                    optimizer = optimizer,
                    metrics = ['accuracy'])
-    return base_model
-
-
-model_cnn = base_model()
-model_cnn.summary()
+    cnn_model.summary()
+    return cnn_model
 
 #%% define lstm model
 
 def lstm_model():
-    inp = Input(shape=(None,3000,1))
-    layer = TimeDistributed(model_cnn)(inp)
+    lstm_inp = Input(shape=(None,3000,2))
+    model_cnn = cnn_model()
+    #for layer in model_cnn.layers:
+    #    layer.trainable = False
+    layer = TimeDistributed(model_cnn)(lstm_inp)
     layer = LSTM (64, return_sequences = True)(layer)
     layer = Dropout(rate=0.5)(layer)
     layer = LSTM (64)(layer)
     out = Dense (6, activation = 'softmax')(layer)
     
-    lstm_model = Model(inp, out)
+    lstm_model = Model(lstm_inp, out)
     optimizer = Adam (lr = 0.001, beta_1 = 0.9, beta_2 = 0.999, decay = 0, epsilon = (10**-8))
-    model.compile (loss = 'categorical_crossentropy',
+    lstm_model.compile (loss = 'categorical_crossentropy',
                    optimizer = optimizer,
                    metrics = ['accuracy'])
     
-    return model
+    return lstm_model
 
 model_lstm = lstm_model()
 model_lstm.summary()
+
+#%%
+
+X_train_resh = X_train.reshape(X_train.shape[0],3000,2,1)
+
 #%% # train the model
 
-model_lstm.fit(X_train,y_train_hot,
-          epochs=20,
+model_lstm.fit(X_train_resh,y_train_hot,
+          epochs=10,
           batch_size=128,
           verbose =2)
 
@@ -113,3 +123,4 @@ model_lstm.fit(X_train,y_train_hot,
 
 cat, test_acc = model_lstm.evaluate(X_test, y_test_hot, batch_size=128)
 print("accuracy score on test set is:{}".format(round(test_acc, 3)))
+
