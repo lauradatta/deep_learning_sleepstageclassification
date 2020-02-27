@@ -10,7 +10,7 @@ import os
 import pickle
 from keras import Model, layers
 from keras.models import Sequential
-from keras.layers import Conv1D, MaxPooling1D, LSTM, Dense, Flatten, TimeDistributed, Input, Dropout
+from keras.layers import Conv1D, MaxPooling1D, LSTM, Dense, Flatten, TimeDistributed, Input, Dropout, Reshape
 from keras.optimizers import Adam
 import logging
 
@@ -58,6 +58,30 @@ cat, test_acc = model.evaluate(X_test, y_test_hot, batch_size=128)
 print("accuracy score on test set is:{}".format(round(test_acc, 3)))
 
 
+#%%
+
+def cnn_lstm_model():
+    inp = Input(shape = (3000,1))
+    cnn = TimeDistributed(Conv1D(8, 8, activation='relu'))(inp)
+    cnn = TimeDistributed(MaxPooling1D (8))(cnn)
+    cnn = Reshape(int(cnn.shape[1]), int(cnn.shape[3]))(cnn)
+    lstm = LSTM (64, return_sequences = True)(cnn)
+    lstm_out = Dense(6, activation = 'softmax')(lstm)
+    
+    model = Model(inp, lstm_out)
+
+    optimizer = Adam (lr = 0.001, beta_1 = 0.9, beta_2 = 0.999, decay = 0, epsilon = (10**-8))
+    model.compile (loss = 'categorical_crossentropy',
+                   optimizer = optimizer,
+                   metrics = ['accuracy'])
+    return model
+
+
+model = cnn_lstm_model()
+model.summary()
+
+
+
 
 #%% Now seperapte CNN and lstm and add dropouts
 
@@ -71,12 +95,12 @@ def cnn_model():
     layer=Conv1D (32, (8), activation = 'relu')(layer)
     layer=MaxPooling1D(8)(layer)
     flat = Flatten()(layer)
-    #out = Dense(64, activation = "relu")(layer)
+    out = Dense(64, activation = "relu")(flat)
     #model.add (LSTM (64, return_sequences = True))
     #model.add (LSTM (64))
     #model.add (Dense (6, activation = 'softmax'))
     
-    cnn_model=Model(inputs = inp, outputs = flat)    
+    cnn_model=Model(inputs = inp, outputs = out)    
     optimizer=Adam (lr = 0.001, beta_1 = 0.9, beta_2 = 0.999, decay = 0, epsilon = (10**-8))
     cnn_model.compile (loss = 'categorical_crossentropy',
                    optimizer = optimizer,
