@@ -68,3 +68,4 @@ spec_train, spec_test, y_train_s, y_test_s = train_test_split (signal_spec_st, l
 # hot label the labels
 y_train_hot = to_categorical (y_train, num_classes = 6)
 y_test_hot = to_categorical (y_test, num_classes = 6)
+
