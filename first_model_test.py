@@ -45,4 +45,8 @@ hist = model.fit([raw_train, spec_train], y_train_hot,
 
 y_pred = model.predict([raw_test, spec_test])
 y_pred = y_pred.argmax(axis=-1)
-np.savetxt(y_pred)
+y_pred = y_pred.astype(int)
+
+with open('answer.txt', 'w') as f:
+    for item in y_pred:
+        f.write("%s\n" % item)
