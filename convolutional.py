@@ -59,7 +59,7 @@ model_lstm.fit(X_train,y_train_hot,
 cat, test_acc = model_lstm.evaluate(X_test, y_test_hot, batch_size=128)
 print("accuracy score on test set is:{}".format(round(test_acc, 3)))
 
-#%%
+#%% extended cnn lstm model
 def cnn_model2():
     inp = Input(shape=(3000, 2))
     img_1 = Conv1D(16, kernel_size=5, activation='relu', padding="valid")(inp)

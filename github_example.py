@@ -31,7 +31,7 @@ def get_base_model():
     
     opt = optimizers.Adam(0.001)
 
-    base_model.compile(optimizer=opt, loss=losses.sparse_categorical_crossentropy, metrics=['acc'])
+    base_model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['acc'])
     #model.summary()
     return base_model
 
@@ -39,20 +39,20 @@ def get_base_model():
 def get_model_lstm():
     nclass = 5
 
-    seq_input = Input(shape=(None, 3000, 2))
+    seq_input = Input(shape=(3000, 2))
     base_model = get_base_model()
-    for layer in base_model.layers:
-        layer.trainable = False
-    encoded_sequence = TimeDistributed(base_model)(seq_input)
-    encoded_sequence = Bidirectional(LSTM(100, return_sequences=True))(encoded_sequence)
+    #for layer in base_model.layers:
+    #    layer.trainable = False
+    encoded_sequence = (base_model)(seq_input)
+    encoded_sequence = LSTM(100, return_sequences=True)(encoded_sequence)
     encoded_sequence = Dropout(rate=0.5)(encoded_sequence)
-    encoded_sequence = Bidirectional(LSTM(100, return_sequences=True))(encoded_sequence)
+    encoded_sequence = LSTM(100, return_sequences=True)(encoded_sequence)
     #out = TimeDistributed(Dense(nclass, activation="softmax"))(encoded_sequence)
     out = Convolution1D(nclass, kernel_size=1, activation="softmax", padding="same")(encoded_sequence)
 
     model = models.Model(seq_input, out)
 
-    model.compile(optimizers.Adam(0.001), losses.sparse_categorical_crossentropy, metrics=['acc'])
+    model.compile(optimizers.Adam(0.001), loss = 'categorical_crossentropy', metrics=['acc'])
     model.summary()
 
     return model
