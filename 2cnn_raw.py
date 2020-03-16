@@ -39,6 +39,7 @@ def get_model():
     
     comb = concatenate([layer1, layer2])
     comb = LSTM(64, return_sequences = True) (comb)
+    comb = LSTM (64)(comb)
     
     output_layer= Dense(6, activation = 'softmax')(comb)
     
