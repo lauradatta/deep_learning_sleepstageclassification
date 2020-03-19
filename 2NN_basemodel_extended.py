@@ -43,6 +43,7 @@ comb = Reshape((1,2816))(comb)
     
 comb = LSTM(64, return_sequences = True) (comb)
 comb = LSTM (32)(comb)
+comb = Dense(32, activation = "relu")(comb)
 output_layer= Dense(6, activation = 'softmax')(comb)
 
 
