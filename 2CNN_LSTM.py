@@ -40,7 +40,7 @@ comb = Dense(32, activation = 'relu') (comb)
 
 output_layer = Dense (6, activation = 'softmax') (comb)
 
-optimizer = optimizers.Adam (lr = 0.0005, beta_1 = 0.9, beta_2 = 0.999, decay = 0, epsilon = (10 ** -8))
+optimizer = optimizers.Adam (lr = 0.001, beta_1 = 0.9, beta_2 = 0.999, decay = 0, epsilon = (10 ** -8))
 
 model = Model (inputs = [input_raw,input_spec], outputs = output_layer)
 model.compile (loss = 'categorical_crossentropy',
